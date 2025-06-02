@@ -13,6 +13,7 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<DatabaseService>();
 
 var app = builder.Build();
 
@@ -28,6 +29,12 @@ else
     app.UseHsts();
 }
 
+using (var scope = app.Services.CreateScope())
+{
+    var dbResetService = scope.ServiceProvider.GetRequiredService<DatabaseService>();
+    await dbResetService.ResetDatabaseAsync();  // <-- Comment this out when not needed
+}
+
 app.UseHttpsRedirection();
 app.UseRouting();
 
@@ -39,6 +46,9 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
+
+app.MapControllerRoute(name: "areas", 
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
 app.MapRazorPages()
    .WithStaticAssets();
