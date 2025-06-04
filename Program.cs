@@ -53,7 +53,7 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var dbResetService = scope.ServiceProvider.GetRequiredService<DatabaseService>();
-    await dbResetService.ResetDatabaseAsync();
+    //await dbResetService.ResetDatabaseAsync();
 }
 
 if (app.Environment.IsDevelopment())
