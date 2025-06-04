@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SeniorLearnWebApp.Models;
 
 namespace SeniorLearnWebApp.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public DbSet<DeliveryPattern> DeliveryPatterns { get; set; }
         public DbSet<Enrolment> Enrolments { get; set; }
@@ -54,8 +55,10 @@ namespace SeniorLearnWebApp.Data
             });
 
             modelBuilder.Entity<Member>()
-                .Property(m => m.MemberId)
-                .ValueGeneratedOnAdd();
+                .HasOne(m => m.User)
+                .WithOne(u => u.Member)
+                .HasForeignKey<ApplicationUser>(u => u.MemberId)
+                .OnDelete(DeleteBehavior.SetNull);
             
             modelBuilder.Entity<MemberRole>(entity =>
             {

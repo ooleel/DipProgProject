@@ -1,0 +1,133 @@
+@{
+    ViewData["Title"] = "Create Lesson";
+    var statusValues = Enum.GetValues(typeof(SeniorLearnWebApp.Models.Lesson.LessonStatus));
+    var modeValues = Enum.GetValues(typeof(SeniorLearnWebApp.Models.Lesson.LessonDeliveryMode));
+    var instructors = ViewBag.Instructors as List<SelectListItem>;
+    var deliveryPatterns = ViewBag.DeliveryPatterns as List<SelectListItem>;
+}
+
+<div class="auth-container">
+    <h2 class="mb-4">Create a Lesson</h2>
+
+    <form asp-action="Create" method="post" novalidate>
+        <div class="form-row">
+            <p class="field-name">Title:</p>
+            <input name="Title" class="form-control" />
+        </div>
+
+        <div class="form-row">
+            <p class="field-name">Status:</p>
+            <select name="Status" class="form-control">
+                @foreach (var val in statusValues)
+                {
+                    <option value="@val">@val</option>
+                }
+            </select>
+        </div>
+
+        <div class="form-row">
+            <p class="field-name">Instructor:</p>
+            <select name="InstructorId" class="form-control">
+                @foreach (var inst in instructors)
+                {
+                    <option value="@inst.Value">@inst.Text</option>
+                }
+            </select>
+        </div>
+
+        <div class="form-row">
+            <p class="field-name">Location:</p>
+            <input name="Location" class="form-control" />
+        </div>
+
+        <div class="form-row">
+            <p class="field-name">Delivery Mode:</p>
+            <select name="DeliveryMode" class="form-control">
+                @foreach (var mode in modeValues)
+                {
+                    <option value="@mode">@mode</option>
+                }
+            </select>
+        </div>
+
+        <div class="form-row">
+            <p class="field-name">Capacity:</p>
+            <input name="Capacity" class="form-control" type="number" min="1" />
+        </div>
+
+        <div class="form-row">
+            <p class="field-name">Duration (minutes):</p>
+            <input name="DurationMinutes" class="form-control" type="number" min="1" />
+        </div>
+
+        <div class="form-row">
+            <p class="field-name">Start Date/Time:</p>
+            <input name="Start" class="form-control" type="datetime-local" />
+        </div>
+
+        <div class="form-row">
+            <p class="field-name">Delivery Pattern (optional):</p>
+            <select name="DeliveryPatternId" class="form-control">
+                <option value="">None</option>
+                @foreach (var dp in deliveryPatterns)
+                {
+                    <option value="@dp.Value">@dp.Text</option>
+                }
+            </select>
+        </div>
+
+        <div class="form-row mb-4">
+            <p class="field-name">Description:</p>
+            <textarea name="Description" class="form-control" rows="3"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Create Lesson</button>
+    </form>
+</div>
+
+<style>
+    .auth-container {
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 30px 25px;
+        background: #fff;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+    }
+
+    .form-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .field-name {
+        flex: 0 0 160px;
+        font-weight: 600;
+        margin: 0;
+        padding-right: 15px;
+        font-size: 1rem;
+        color: #333;
+    }
+
+    .form-control {
+        flex: 1;
+        padding: 8px 10px;
+        font-size: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    .btn-primary {
+        background-color: #4a90e2;
+        border: none;
+        font-weight: 600;
+        font-size: 1.1em;
+        padding: 10px;
+        border-radius: 6px;
+    }
+
+    .btn-primary:hover {
+        background-color: #357abd;
+    }
+</style>

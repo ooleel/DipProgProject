@@ -20,7 +20,7 @@ public class DatabaseService
         await _context.Database.EnsureCreatedAsync();
 
         // Optional: Add additional seeding here
-        if (!await _context.Members.AnyAsync())
+        /*if (!await _context.Members.AnyAsync())
         {
             _context.Members.AddRange(
                 new Member
@@ -105,7 +105,6 @@ public class DatabaseService
                     DeliveryPatternId = 1
                 });
             await _context.SaveChangesAsync();
-        }
-        
+        }*/
     }
 }

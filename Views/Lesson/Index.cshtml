@@ -1,0 +1,34 @@
+@model List<SeniorLearnWebApp.Models.Lesson>
+@{
+    ViewData["Title"] = "All Lessons";
+    var isProfessional = (bool)ViewBag.IsProfessional;
+    //<td>@lesson.DeliveryPattern?.PatternName</td>
+}
+
+<h2>All Lessons</h2>
+
+<table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+        <th>Lesson ID</th>
+        <th>Lesson Title</th>
+        <th>Instructor</th>
+        <th>Delivery Pattern</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var lesson in Model)
+    {
+        <tr>
+            <td>@lesson.LessonId</td>
+            <td>@lesson.Title</td>
+            <td>@(lesson.Instructor != null ? lesson.Instructor.FirstName + " " + lesson.Instructor.LastName : "N/A")</td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+@if (isProfessional)
+{
+    <a class="btn btn-primary" asp-action="Create">Create New Lesson</a>
+}

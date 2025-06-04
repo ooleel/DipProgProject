@@ -6,6 +6,8 @@ public class Member {
     public string Email {get; set;} = null!;
     public string Phone {get; set;} = null!; //!! not Int
     public DateTime DateOfBirth {get; set;}
+    
+    public ApplicationUser? User { get; set; } // Navigation property (optional)
 
     //1-* relationships
     public ICollection<Payment> Payments {get; set;}
