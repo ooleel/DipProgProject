@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SeniorLearnWebApp.Models;
@@ -6,10 +7,16 @@ namespace SeniorLearnWebApp.Data;
 
 public class DatabaseService
 {
+    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly ApplicationDbContext _context;
 
-    public DatabaseService(ApplicationDbContext context)
+    public DatabaseService(UserManager<ApplicationUser> userManager,
+        SignInManager<ApplicationUser> signInManager,
+        ApplicationDbContext context)
     {
+        _userManager = userManager;
+        _signInManager = signInManager;
         _context = context;
     }
 
@@ -25,16 +32,16 @@ public class DatabaseService
             _context.Members.AddRange(
                 new Member
                 {
-                    FirstName = "John", 
-                    LastName = "Pork", 
-                    Phone = "000", 
-                    Email = "jsmith@example.com", 
+                    FirstName = "John",
+                    LastName = "Pork",
+                    Phone = "000",
+                    Email = "jsmith@example.com",
                     DateOfBirth = new DateTime(2020, 1, 1)
                 },
-                new Member { 
-                    FirstName = "Jane", 
-                    LastName = "Doe", 
-                    Phone = "000", 
+                new Member {
+                    FirstName = "Jane",
+                    LastName = "Doe",
+                    Phone = "000",
                     Email = "jdoe@example.com",
                     DateOfBirth = new DateTime(2020, 1, 1)
                 }
@@ -61,7 +68,7 @@ public class DatabaseService
                 });
             await _context.SaveChangesAsync();
         }
-        
+
         if (!await _context.DeliveryPatterns.AnyAsync())
         {
          _context.DeliveryPatterns.AddRange(
@@ -75,7 +82,7 @@ public class DatabaseService
              });
          await _context.SaveChangesAsync();
         }
-        
+
         if (!await _context.Lessons.AnyAsync())
         {
             _context.Lessons.AddRange(
@@ -106,5 +113,99 @@ public class DatabaseService
                 });
             await _context.SaveChangesAsync();
         }*/
+    }
+
+    public async Task SeedDatabaseAsync(String firstname, String lastname, String email, String password,
+        String roletype)
+    {
+        var user = new Member
+        {
+            FirstName = firstname,
+            LastName = lastname,
+            Email = email,
+            Phone = "000",
+            DateOfBirth = new DateTime(2000, 01, 01)
+        };
+
+        _context.Members.Add(user);
+        await _context.SaveChangesAsync();
+
+        if (roletype == "Professional")
+        {
+            var role = new MemberRole
+            {
+                MemberId = user.MemberId,
+                Role = MemberRole.MemberRoleType.Professional,
+                StartDate = DateTime.UtcNow
+            };
+            _context.MemberRoles.Add(role);
+            await _context.SaveChangesAsync();
+            var member = new ApplicationUser
+            {
+                UserName = email,
+                Email = email,
+                MemberId = user.MemberId
+            };
+
+            await _userManager.CreateAsync(member, password);
+            await _userManager.AddToRoleAsync(member, "Professional");
+
+            var lesson = new Lesson
+            {
+                Title = "Lesson 1",
+                Status = Lesson.LessonStatus.Scheduled,
+                InstructorId = user.MemberId,
+                Location = "Online",
+                DeliveryMode = Lesson.LessonDeliveryMode.Online,
+                Capacity = 10,
+                Description = "Lesson 1 Description",
+                Start = new DateTime(),
+                DurationMinutes = 60,
+            };
+            _context.Lessons.Add(lesson);
+            await _context.SaveChangesAsync();
+        }
+        else if (roletype == "Honorary")
+        {
+            var role = new MemberRole
+            {
+                MemberId = user.MemberId,
+                Role = MemberRole.MemberRoleType.Honorary,
+                StartDate = DateTime.UtcNow
+            };
+            _context.MemberRoles.Add(role);
+            await _context.SaveChangesAsync();
+            var member = new ApplicationUser
+            {
+                UserName = email,
+                Email = email,
+                MemberId = user.MemberId
+            };
+
+            await _userManager.CreateAsync(member, password);
+            await _userManager.AddToRoleAsync(member, "Honorary");
+        }
+        else
+        {
+            {
+                var role = new MemberRole
+                {
+                    MemberId = user.MemberId,
+                    Role = MemberRole.MemberRoleType.Standard,
+                    StartDate = DateTime.UtcNow
+                };
+                _context.MemberRoles.Add(role);
+                await _context.SaveChangesAsync();
+                var member = new ApplicationUser
+                {
+                    UserName = email,
+                    Email = email,
+                    MemberId = user.MemberId
+                };
+
+                await _userManager.CreateAsync(member, password);
+                await _userManager.AddToRoleAsync(member, "Standard");
+            }
+        }
     }
 }

@@ -46,14 +46,39 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = "/Account/AccessDenied";
     options.SlidingExpiration = true;
 });
-
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Professional", policy => policy.RequireRole("Professional"));
+    options.AddPolicy("Honorary", policy => policy.RequireRole("Honorary"));
+});
 var app = builder.Build();
 
 // Ensure DB is initialized
 using (var scope = app.Services.CreateScope())
 {
-    var dbResetService = scope.ServiceProvider.GetRequiredService<DatabaseService>();
-    //await dbResetService.ResetDatabaseAsync();
+    var reset = true;
+    if (reset == true)
+    {
+        var dbResetService = scope.ServiceProvider.GetRequiredService<DatabaseService>();
+        await dbResetService.ResetDatabaseAsync();
+        var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+        var roles = new[] { "Standard", "Professional", "Honorary" };
+
+        foreach (var role in roles)
+        {
+            if (!await roleManager.RoleExistsAsync(role))
+            {
+                await roleManager.CreateAsync(new IdentityRole(role));
+            }
+        }
+
+        await dbResetService.SeedDatabaseAsync("John", "Smith", "jsmith@example.com", "Password123!@#",
+            "Professional");
+        await dbResetService.SeedDatabaseAsync("Jane", "Doe", "jdoe@example.com", "Password123!@#",
+            "Standard");
+        await dbResetService.SeedDatabaseAsync("Sponge", "Bob", "sbob@example.com", "Password123!@#",
+            "Honorary");
+    }
 }
 
 if (app.Environment.IsDevelopment())
