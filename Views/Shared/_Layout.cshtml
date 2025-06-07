@@ -1,4 +1,22 @@
-﻿<!DOCTYPE html>
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+@{
+    ViewData["Title"] = "SeniorLearn";
+    Layout = null; // This layout is used for all pages, so we set it to null here.
+}
+
+@{
+    //detect if on Home/Index
+    var rd = ViewContext.RouteData.Values;
+    var ctrl = rd["controller"]?.ToString();
+    var action = rd["action"]?.ToString();
+    bool isSplash = (ctrl == "Home" && action == "Index");
+
+    //detect if user is logged in
+    bool isLoggedIn = HttpContextAccessor.HttpContext.Session.GetInt32("UserId") != null;
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -14,42 +32,46 @@
         <nav class="navbar navbar-expand-md navbar-light bg-light">
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">SeniorLearn</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
 
-                <div class="collapse navbar-collapse" id="mainNav">
-                    <ul class="navbar-nav me-auto mb-2 mb-md-0">
-                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" asp-controller="Members" asp-action="Index">Members</a></li>
-                        <li class="nav-item"><a class="nav-link" asp-controller="Lessons" asp-action="Index">Lessons</a></li>
-                        <li class="nav-item"><a class="nav-link" asp-controller="Enrolments" asp-action="Index">Enrolments</a></li>
-                    </ul>
+                @if (!isSplash)
+                {
+                    @* full menu when not on splash page *@
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
 
-                    <ul class="navbar-nav">
-                        @if (User.Identity?.IsAuthenticated ?? false)
-                        {
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="userMenu" role="button" data-bs-toggle="dropdown">
-                                    @User.Identity.Name
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-end" >
-                                    <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">Profil</a></li>
-                                    <li>
-                                        <form method="post" asp-area="Identity" asp-page="/Account/Logout">
-                                            <button class="dropdown-item">Log out</button>
-                                        </form>
-                                    </li>
-                                </ul>
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="nav-item"><a class="nav-link" asp-area="Identity" asp-page="/Account/Register">Register</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-area="Identity" asp-page="/Account/Login">Log in</a></li>
-                        }
-                    </ul>
-                </div>
+                    <div class="collapse navbar-collapse" id="mainNav">
+                        <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                            <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Home</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Members" asp-action="Index">Members</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Lessons" asp-action="Index">Lessons</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Enrolments" asp-action="Index">Enrolments</a></li>
+                        </ul>
+                        <ul class="navbar-nav">
+                            @if (User.Identity?.IsAuthenticated ?? false)
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="userMenu" role="button" data-bs-toggle="dropdown">
+                                        @User.Identity.Name
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end" >
+                                        <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">Profil</a></li>
+                                        <li>
+                                            <form method="post" asp-area="Identity" asp-page="/Account/Logout">
+                                                <button class="dropdown-item">Log out</button>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="nav-item"><a class="nav-link" asp-area="Identity" asp-page="/Account/Register">Register</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-area="Identity" asp-page="/Account/Login">Log in</a></li>
+                            }
+                        </ul>
+                    </div>
+                }
             </div>
         </nav>
     </header>

@@ -15,7 +15,16 @@ namespace SeniorLearnWebApp.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            bool isLoggedIn = HttpContext.Session.GetInt32("MemberId") != null;
+            string role = HttpContext.Session.GetString("Role") ?? "";
+            
+            var vm = new HomeIndexViewModel
+            {
+                IsLoggedIn = isLoggedIn,
+                Role = role
+            };
+
+            return View(vm);
         }
 
         public IActionResult Privacy()
