@@ -23,15 +23,12 @@ builder.Services.AddSession(options =>
 //2. Identity
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
-builder.Services.AddControllersWithViews();
 
-var app = builder.Build();
-
-/* ADD THIS?
 //3. MVC
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
-*/
+
+var app = builder.Build();
 
 /* ADD THIS?
 //4. Domain services/repos
@@ -72,7 +69,6 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
-app.MapRazorPages()
-   .WithStaticAssets();
+app.MapRazorPages();
 
 app.Run();
