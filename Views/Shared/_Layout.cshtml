@@ -1,19 +1,12 @@
-﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
-    ViewData["Title"] = "SeniorLearn";
-    Layout = null; // This layout is used for all pages, so we set it to null here.
-}
-
-@{
-    //detect if on Home/Index
+    //detect if on splash page = Home/Index AND not logged in
     var rd = ViewContext.RouteData.Values;
-    var ctrl = rd["controller"]?.ToString();
-    var action = rd["action"]?.ToString();
-    bool isSplash = (ctrl == "Home" && action == "Index");
-
-    //detect if user is logged in
-    bool isLoggedIn = HttpContextAccessor.HttpContext.Session.GetInt32("UserId") != null;
+    bool isHomeIndex = rd["controller"]?.ToString() == "Home" 
+                    && rd["action"]?.ToString() == "Index";
+    bool isAnonymous = !User.Identity.IsAuthenticated;
+    bool isSplash = isHomeIndex && isAnonymous;
 }
 
 <!DOCTYPE html>
@@ -23,58 +16,77 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - SeniorLearn</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/SeniorLearnWebApp.styles.css" asp-append-version="true" />
 </head>
 
 <body>
-    <header>
+<header>
+    @if (isSplash)
+    {
+        @* minimal menu when on splash page *@
+        <nav class="navbar navbar-expand-md navbar-light bg-light">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">SeniorLearn</a>
+            </div>
+        </nav>
+    }
+    else
+    {
+        @* full nav anywhere else *@
         <nav class="navbar navbar-expand-md navbar-light bg-light">
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">SeniorLearn</a>
 
-                @if (!isSplash)
-                {
-                    @* full menu when not on splash page *@
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
+                <div class="d-flex">
+                    <a class="btn btn-primary me-2" asp-controller="Member" asp-action="Register">Register</a>
+                    <a class="btn btn-outline-secondary" asp-controller="Member" asp-action="Login">Log in</a>
+                </div>
 
-                    <div class="collapse navbar-collapse" id="mainNav">
-                        <ul class="navbar-nav me-auto mb-2 mb-md-0">
-                            <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Home</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Members" asp-action="Index">Members</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Lessons" asp-action="Index">Lessons</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Enrolments" asp-action="Index">Enrolments</a></li>
-                        </ul>
-                        <ul class="navbar-nav">
-                            @if (User.Identity?.IsAuthenticated ?? false)
-                            {
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#" id="userMenu" role="button" data-bs-toggle="dropdown">
-                                        @User.Identity.Name
-                                    </a>
-                                    <ul class="dropdown-menu dropdown-menu-end" >
-                                        <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">Profil</a></li>
-                                        <li>
-                                            <form method="post" asp-area="Identity" asp-page="/Account/Logout">
-                                                <button class="dropdown-item">Log out</button>
-                                            </form>
-                                        </li>
-                                    </ul>
-                                </li>
-                            }
-                            else
-                            {
-                                <li class="nav-item"><a class="nav-link" asp-area="Identity" asp-page="/Account/Register">Register</a></li>
-                                <li class="nav-item"><a class="nav-link" asp-area="Identity" asp-page="/Account/Login">Log in</a></li>
-                            }
-                        </ul>
-                    </div>
-                }
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="mainNav">
+                    <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Index">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Lesson" asp-action="Index">Lessons</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Enrolment" asp-action="MyEnrolments">Enrolments</a>
+                        </li>
+                    </ul>
+
+                    @* User menu for logged in users *@
+                    <ul class="navbar-nav ms-auto">
+                        @if (User.Identity?.IsAuthenticated ?? false)
+                        {
+                            <li class="nav-item">
+                                <form
+                                    class="d-inline"
+                                    method="post"
+                                    asp-controller="Member"
+                                    asp-action="Logout">
+                                    <button type="submit" class="btn btn-link nav-link">Log out</button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a class="nav-link" asp-controller="Account" asp-action="Register">Register</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Account" asp-action="Login">Log in</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
             </div>
         </nav>
-    </header>
+    }
+</header>
 
     <main class="container mt-4">
         @RenderBody()

@@ -12,8 +12,8 @@
     @if (!Model.IsLoggedIn)
     {
         <h4 class="mt-4">Register to start learning with us</h4>
-        <a class="btn btn-primary mx-2" href="@Url.Action("Register", "Account")">Register</a>
-        <a class="btn btn-outline-secondary mx-2" href="@Url.Action("Login", "Account")">Login</a>
+        <a class="btn btn-primary me-2" asp-controller="Member" asp-action="Register">Register</a>
+        <a class="btn btn-outline-secondary" asp-controller="Member" asp-action="Login">Log in</a>
     }
     else
     {

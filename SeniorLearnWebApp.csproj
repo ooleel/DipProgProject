@@ -15,4 +15,11 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Remove="Views\Shared\.__Layout.cshtml" />
+    <Content Remove="wwwroot\css\_Layout.cshtml.css" />
+    <Content Remove="Areas\Identity\Views\_ViewStart.cshtml" />
+    <Content Remove="Areas\Identity\Pages\.__ViewStart.cshtml" />
+  </ItemGroup>
+
 </Project>
