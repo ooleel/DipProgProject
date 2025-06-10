@@ -108,7 +108,7 @@ namespace SeniorLearnWebApp.Controllers
             };
 
             var result = await _userManager.CreateAsync(user, password);
-            await _userManager.AddToRoleAsync(user, "Standard");
+
             if (result.Succeeded)
             {
                 await _signInManager.SignInAsync(user, isPersistent: false);

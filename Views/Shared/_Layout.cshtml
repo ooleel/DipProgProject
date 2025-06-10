@@ -1,66 +1,104 @@
-﻿@using Microsoft.AspNetCore.Identity
-@inject SignInManager<ApplicationUser> SignInManager
-@inject UserManager<ApplicationUser> UserManager
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+//detect if on splash page = Home/Index AND not logged in
+var rd = ViewContext.RouteData.Values;
+bool isHomeIndex = rd["controller"]?.ToString() == "Home"
+&& rd["action"]?.ToString() == "Index";
+bool isAnonymous = !User.Identity.IsAuthenticated;
+bool isSplash = isHomeIndex && isAnonymous;
+}
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - SeniorLearnWebApp</title>
-    <script type="importmap"></script>
-    <script src="~/lib/jquery/jquery.min.js"></script>
-    <script src="~/lib/jquery-validation/jquery.validate.min.js"></script>
-    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <title>@ViewData["Title"] - SeniorLearn</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/SeniorLearnWebApp.styles.css" asp-append-version="true" />
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">SeniorLearnWebApp</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Identity" asp-controller="Account" asp-action="Login">Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Identity" asp-controller="Account" asp-action="Register">Register</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Lesson" asp-action="Index">Lessons</a>
-                        </li>
-                    </ul>
-                    @* <partial name="_LoginPartial" /> Why does this break everything *@
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
+<body>
+<header>
+    @if (isSplash)
+    {
+    @* minimal menu when on splash page *@
+    <nav class="navbar navbar-expand-md navbar-light bg-light">
         <div class="container">
-            &copy; 2025 - SeniorLearnWebApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">SeniorLearn</a>
         </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+    </nav>
+    }
+    else
+    {
+    @* full nav anywhere else *@
+    <nav class="navbar navbar-expand-md navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">SeniorLearn</a>
+
+            <div class="d-flex">
+                <a class="btn btn-primary me-2" asp-controller="Account" asp-action="Register">Register</a>
+                <a class="btn btn-outline-secondary" asp-controller="Account" asp-action="Login">Log in</a>
+            </div>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Home" asp-action="Index">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Lesson" asp-action="Index">Lessons</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Enrolment" asp-action="MyEnrolments">Enrolments</a>
+                    </li>
+                </ul>
+
+                @* User menu for logged in users *@
+                <ul class="navbar-nav ms-auto">
+                    @if (User.Identity?.IsAuthenticated ?? false)
+                    {
+                    <li class="nav-item">
+                        <form
+                            class="d-inline"
+                            method="post"
+                            asp-controller="Member"
+                            asp-action="Logout">
+                            <button type="submit" class="btn btn-link nav-link">Log out</button>
+                        </form>
+                    </li>
+                    }
+                    else
+                    {
+                    <li>
+                        <a class="nav-link" asp-controller="Account" asp-action="Register">Register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Account" asp-action="Login">Log in</a>
+                    </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+    }
+</header>
+
+<main class="container mt-4">
+    @RenderBody()
+</main>
+
+<footer class="border-top py-3 mt-4">
+    <div class="container d-flex justify-content-between">
+        <p>&copy; 2025 SeniorLearn</p>
+        <a asp-controller="Home" asp-action="Privacy">Privacy</a>
+    </div>
+</footer>
+
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+@* @RenderSection("Scripts", required: false) *@
 </body>
-</html>

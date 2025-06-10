@@ -1,9 +1,28 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@*
+    Minimal splash page showing Register > Payment > login for guests
+    and "go to dashboard" for logged in users.
+*@
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-    <p>TEST TEST TEST</p>
+<div class="container text-center mt-5">
+    <h1>Welcome to SeniorLearn</h1>
+    <h2>Connect and learn together</h2>
+
+    @if (!User.Identity.IsAuthenticated)
+    {
+        <h4 class="mt-4">Register to start learning with us</h4>
+        <a class="btn btn-primary me-2" asp-controller="Account" asp-action="Register">Register</a>
+        <a class="btn btn-outline-secondary" asp-controller="Account" asp-action="Login">Log in</a>
+    }
+    else
+    {
+        <p class="mt-4">Welcome back! Ready to continue your learning journey?</p>
+        @if (User.IsInRole("Admin"))
+        {
+            <a class="btn btn-success" href="@Url.Action("Dashboard", "Admin")">Go to Admin Dashboard</a>
+        }
+        else
+        {
+            <a class="btn btn-success" href="@Url.Action("Dashboard", "User")">Go to Dashboard</a>
+        }
+    }
 </div>

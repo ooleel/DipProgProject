@@ -49,12 +49,11 @@ namespace SeniorLearnWebApp.Controllers
             return View(lessons);
         }
 
+        [Authorize]
         [HttpGet]
-        [Authorize(Policy = "Professional")]
         public IActionResult Create()
         {
             // Fetch instructors
-            // TODO Change this so it gets based on Role
             var instructors = _context.Members
                 .Select(m => new SelectListItem
                 {
@@ -79,7 +78,7 @@ namespace SeniorLearnWebApp.Controllers
 
 
         [HttpPost]
-        [Authorize(Policy = "Professional")]
+        [Authorize]
         public async Task<IActionResult> Create(IFormCollection form)
         {
             var title = form["Title"];
