@@ -1,0 +1,38 @@
+@{
+ViewData["Title"] = "Welcome";
+var firstName = ViewData["FirstName"] as string;
+}
+
+<div class="auth-container">
+    <h2 class="mb-4">Welcome, @firstName!</h2>
+
+    <form asp-action="Logout" method="post">
+        <button type="submit" class="btn btn-danger">Logout</button>
+    </form>
+</div>
+
+<style>
+    .auth-container {
+        max-width: 480px;
+        margin: 50px auto;
+        padding: 30px 25px;
+        background: #fff;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        text-align: center;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        border: none;
+        font-weight: 600;
+        font-size: 1.1em;
+        padding: 10px 20px;
+        border-radius: 6px;
+        color: white;
+    }
+
+    .btn-danger:hover {
+        background-color: #c82333;
+    }
+</style>

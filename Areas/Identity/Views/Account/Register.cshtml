@@ -1,0 +1,114 @@
+@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="auth-container">
+    <h2 class="mb-4">Create your account</h2>
+
+    <form asp-action="Register" method="post" novalidate>
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+        <div class="form-row">
+            <p class="field-name">First Name:</p>
+            <input name="FirstName" value="@ViewData["FirstName"]" class="form-control"/>
+            <span asp-validation-for="FirstName" class="text-danger"></span>
+        </div>
+
+        <div class="form-row">
+            <p class="field-name">Last Name:</p>
+            <input name="LastName" value="@ViewData["LastName"]" class="form-control"/>
+            <span asp-validation-for="LastName" class="text-danger"></span>
+        </div>
+
+        <div class="form-row">
+            <p class="field-name">Email:</p>
+            <input name="Email" value="@ViewData["Email"]" class="form-control" type="email"/>
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="form-row">
+            <p class="field-name">Phone:</p>
+            <input name="Phone" value="@ViewData["Phone"]" class="form-control" type="tel"/>
+            <span asp-validation-for="Phone" class="text-danger"></span>
+        </div>
+
+        <div class="form-row">
+            <p class="field-name">Date of Birth:</p>
+            <input name="DateOfBirth" value="@ViewData["DateOfBirth"]" class="form-control" type="date"/>
+            <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+        </div>
+
+        <div class="form-row">
+            <p class="field-name">Password:</p>
+            <input name="Password" class="form-control" type="password"/>
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+        <div class="form-row mb-4">
+            <p class="field-name">Confirm Password:</p>
+            <input name="ConfirmPassword" class="form-control" type="password"/>
+            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Register</button>
+    </form>
+
+    <div class="mt-3 text-center">
+        <p>Already have an account? <a asp-action="Login">Login here</a></p>
+    </div>
+</div>
+
+<style>
+    .auth-container {
+        max-width: 480px;
+        margin: 50px auto;
+        padding: 30px 25px;
+        background: #fff;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+    }
+
+    .form-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .field-name {
+        flex: 0 0 130px;
+        font-weight: 600;
+        margin: 0;
+        padding-right: 15px;
+        font-size: 1rem;
+        color: #333;
+    }
+
+    .form-control {
+        flex: 1;
+        padding: 8px 10px;
+        font-size: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    .text-danger {
+        margin-left: 145px; /* same space as label + padding */
+        font-size: 0.875rem;
+        color: #d9534f;
+        margin-top: 2px;
+        display: block;
+    }
+
+    .btn-primary {
+        background-color: #4a90e2;
+        border: none;
+        font-weight: 600;
+        font-size: 1.1em;
+        padding: 10px;
+        border-radius: 6px;
+    }
+
+    .btn-primary:hover {
+        background-color: #357abd;
+    }
+</style>

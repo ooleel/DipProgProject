@@ -15,4 +15,13 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Areas\Identity\Account\Login.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\Identity\Account\Register.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Account\Login.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Account\Register.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\MemberRoles\Edit.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\MemberRoles\Index.cshtml" />
+  </ItemGroup>
+
 </Project>
