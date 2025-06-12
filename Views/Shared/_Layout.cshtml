@@ -35,53 +35,52 @@ bool isSplash = isHomeIndex && isAnonymous;
     <nav class="navbar navbar-expand-md navbar-light bg-light">
         <div class="container">
             <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">SeniorLearn</a>
-
-            <div class="d-flex">
-                <a class="btn btn-primary me-2" asp-controller="Account" asp-action="Register">Register</a>
-                <a class="btn btn-outline-secondary" asp-controller="Account" asp-action="Login">Log in</a>
-            </div>
-
+            
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
             <div class="collapse navbar-collapse" id="mainNav">
-                <ul class="navbar-nav me-auto mb-2 mb-md-0">
-                    <li class="nav-item">
-                        <a class="nav-link" asp-controller="Home" asp-action="Index">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-controller="Lesson" asp-action="Index">Lessons</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-controller="Enrolment" asp-action="MyEnrolments">Enrolments</a>
-                    </li>
-                </ul>
+                @if (User.Identity?.IsAuthenticated ?? false)
+                {
+                    @* Nav menu for logged in/authenticated users *@
+                    <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Index">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Lesson" asp-action="Index">Lessons</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Enrolment" asp-action="MyEnrolments">Enrolments</a>
+                        </li>
+                    </ul>
 
-                @* User menu for logged in users *@
-                <ul class="navbar-nav ms-auto">
-                    @if (User.Identity?.IsAuthenticated ?? false)
-                    {
-                    <li class="nav-item">
-                        <form
-                            class="d-inline"
-                            method="post"
-                            asp-controller="Member"
-                            asp-action="Logout">
-                            <button type="submit" class="btn btn-link nav-link">Log out</button>
-                        </form>
-                    </li>
+                    @* User menu for logged in users *@
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <form
+                                class="d-inline"
+                                method="post"
+                                asp-controller="Member"
+                                asp-action="Logout">
+                                <button type="submit" class="btn btn-link nav-link">Log out</button>
+                            </form>
+                        </li>
+                    </ul>
                     }
-                    else
-                    {
-                    <li>
-                        <a class="nav-link" asp-controller="Account" asp-action="Register">Register</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-controller="Account" asp-action="Login">Log in</a>
-                    </li>
-                    }
-                </ul>
+                else
+                {
+                    @* Auth buttons for non-splash pages + when not auth + only in collapsible menu *@
+                    <ul class="navbar-nav ms-auto">
+                        <li>
+                            <a class="nav-link" asp-controller="Account" asp-action="Register">Register</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Account" asp-action="Login">Log in</a>
+                        </li>
+                    </ul>
+                }
             </div>
         </div>
     </nav>
