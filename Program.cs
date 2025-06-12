@@ -18,6 +18,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 
 // MVC services
 builder.Services.AddControllersWithViews();
+builder.Services.AddRazorPages();
 builder.Services.AddScoped<DatabaseService>();
 
 // Identity configuration
@@ -42,7 +43,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 {
     options.Cookie.HttpOnly = true;
     options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
-    options.LoginPath = "/Identity/Account/Login";
+    options.LoginPath = "/Account/Login"; //matches non-area controller
     options.AccessDeniedPath = "/Account/AccessDenied";
     options.SlidingExpiration = true;
 });
@@ -95,16 +96,24 @@ else
 app.UseStaticFiles();
 
 app.UseRouting();
+app.Use(async (ctx, next) =>
+{
+    Console.WriteLine($"{ctx.Request.Method} {ctx.Request.Path}");
+    await next();
+});
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllerRoute(
+//1st to handle area routing
+/*app.MapControllerRoute(
     name: "areas",
-    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+    pattern: "{area:exits}/{controller=Home}/{action=Index}/{id?}");*/
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapRazorPages();
 
 app.Run();

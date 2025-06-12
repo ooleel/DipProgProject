@@ -22,6 +22,28 @@
     <_ContentIncludedByDefault Remove="Views\Account\Register.cshtml" />
     <_ContentIncludedByDefault Remove="Views\MemberRoles\Edit.cshtml" />
     <_ContentIncludedByDefault Remove="Views\MemberRoles\Index.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\Identity\Views\Account\._Login.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\Identity\Views\Account\._Register.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\Identity\Views\Account\._Welcome.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\Identity\Views\Account\Login.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\Identity\Views\Account\Register.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\Identity\Views\Account\Welcome.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Areas\Identity\Pages\Account\Login.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\Identity\Pages\Account\Register.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\Identity\Pages\Account\Welcome.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="Views\Account\Login.cshtml" />
+    <AdditionalFiles Include="Views\Account\Register.cshtml" />
+    <AdditionalFiles Include="Views\Account\Welcome.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Areas\" />
   </ItemGroup>
 
 </Project>

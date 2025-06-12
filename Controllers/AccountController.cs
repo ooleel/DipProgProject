@@ -9,7 +9,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace SeniorLearnWebApp.Controllers
 {
-    [Area("Identity")]
+    [AllowAnonymous]
+    //[Area("Identity")] causes routing issues!!
     public class AccountController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -31,6 +32,8 @@ namespace SeniorLearnWebApp.Controllers
         {
             return View();
         }
+
+        public IActionResult Ping() => Content("ding");
 
         [HttpPost]
         public async Task<IActionResult> Register(IFormCollection form)
@@ -108,7 +111,7 @@ namespace SeniorLearnWebApp.Controllers
             };
 
             var result = await _userManager.CreateAsync(user, password);
-            await _userManager.AddToRoleAsync(user, "Standard");
+
             if (result.Succeeded)
             {
                 await _signInManager.SignInAsync(user, isPersistent: false);
@@ -150,7 +153,7 @@ namespace SeniorLearnWebApp.Controllers
                 await _signInManager.PasswordSignInAsync(email, password, isPersistent: false, lockoutOnFailure: false);
             if (result.Succeeded)
             {
-                return RedirectToAction("Welcome", "Account", new { area = "Identity" });
+                return RedirectToAction("Welcome", "Account"); //no need of area reference 
             }
 
             ModelState.AddModelError(string.Empty, "Invalid login attempt.");

@@ -1,3 +1,5 @@
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     ViewData["Title"] = "Register";
 }
@@ -9,45 +11,38 @@
         <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
 
         <div class="form-row">
-            <p class="field-name">First Name:</p>
+            <label class="field-name">First Name:</label>
             <input name="FirstName" value="@ViewData["FirstName"]" class="form-control"/>
-            <span asp-validation-for="FirstName" class="text-danger"></span>
         </div>
 
         <div class="form-row">
-            <p class="field-name">Last Name:</p>
+            <label class="field-name">Last Name:</label>
             <input name="LastName" value="@ViewData["LastName"]" class="form-control"/>
-            <span asp-validation-for="LastName" class="text-danger"></span>
         </div>
 
         <div class="form-row">
-            <p class="field-name">Email:</p>
+            <label class="field-name">Email:</label>
             <input name="Email" value="@ViewData["Email"]" class="form-control" type="email"/>
-            <span asp-validation-for="Email" class="text-danger"></span>
         </div>
 
         <div class="form-row">
-            <p class="field-name">Phone:</p>
+            <label class="field-name">Phone:</label>
             <input name="Phone" value="@ViewData["Phone"]" class="form-control" type="tel"/>
-            <span asp-validation-for="Phone" class="text-danger"></span>
         </div>
 
         <div class="form-row">
-            <p class="field-name">Date of Birth:</p>
+            <label class="field-name">Date of Birth:</label>
             <input name="DateOfBirth" value="@ViewData["DateOfBirth"]" class="form-control" type="date"/>
-            <span asp-validation-for="DateOfBirth" class="text-danger"></span>
         </div>
 
         <div class="form-row">
-            <p class="field-name">Password:</p>
+            <label class="field-name">Password:</label>
             <input name="Password" class="form-control" type="password"/>
-            <span asp-validation-for="Password" class="text-danger"></span>
         </div>
 
         <div class="form-row mb-4">
-            <p class="field-name">Confirm Password:</p>
+            <label class="field-name">Confirm Password:</label>
             <input name="ConfirmPassword" class="form-control" type="password"/>
-            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
         </div>
 
         <button type="submit" class="btn btn-primary w-100">Register</button>
